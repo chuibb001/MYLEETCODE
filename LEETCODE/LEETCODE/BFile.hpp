@@ -157,7 +157,7 @@ public:
     }
   };
   void sortColors2(vector<int>& nums) {
-    int n = nums.size();
+    int n = (int)nums.size();
     int p0 = 0, p2 = n - 1;
     for (int i = 0; i <= p2; ++i) {
       while (i <= p2 && nums[i] == 2) {
