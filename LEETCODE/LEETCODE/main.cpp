@@ -6,7 +6,7 @@
 //
 /*
  1、push_back是引用传递，[i]也是返回引用.
- 
+ 2、定义定长的二维数组 int matrix[m][n]
  */
 #include <iostream>
 
