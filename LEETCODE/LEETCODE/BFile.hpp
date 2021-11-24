@@ -84,7 +84,78 @@ public:
     
     return sum;
   };
-  
+  // 有权重求极值的版本
+  int minPathSum(vector<vector<int>>& grid) {
+    int sum = 0;
+    unsigned long m = grid.size();
+    unsigned long n = grid[0].size();
+    
+    int matrix[m][n];
+    for (int i = 0; i < m; i ++) {
+      for (int j = 0; j < n; j ++) {
+        int value = grid[i][j];
+        if (i == 0 && j == 0) {
+          matrix[i][j] = value;
+        } else if (i == 0) {
+          matrix[i][j] = matrix[i][j - 1] + value;
+        } else if (j == 0) {
+          matrix[i][j] = matrix[i - 1][j] + value;
+        } else {
+          int value1 = matrix[i - 1][j];
+          int value2 = matrix[i][j - 1];
+          int cur_value = value1 < value2? value1: value2;
+          cur_value += value;
+          matrix[i][j] = cur_value;
+        }
+      }
+    }
+    sum = matrix[m - 1][n - 1];
+    return sum;
+  };
+//  给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+//  此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+  void sortColors(vector<int>& nums) {
+    int first = 0;
+    int last = (int)nums.size() - 1;
+    while (first < last &&
+           first < nums.size() &&
+           last >= 0) {
+      if (nums[first] == 0) {
+        first ++;
+      } else if (nums[last] == 2) {
+        last --;
+      } else if (nums[first] == 2) {
+        nums[first] = nums[last];
+        nums[last] = 2;
+        last --;
+      } else if (nums[last] == 0) {
+        nums[last] = nums[first];
+        nums[first] = 0;
+        first ++;
+      } else if (nums[first] == nums[last]) {
+        // special case : first = last = 1, break it
+        bool has_swap = false;
+        for (int i = first + 1; i < last; i ++) {
+          int value = nums[i];
+          if (value == 0) {
+            nums[first] = 0;
+            nums[i] = 1;
+            has_swap = true;
+            break;
+          } else if (value == 2) {
+            nums[last] = 2;
+            nums[i] = 1;
+            has_swap = true;
+            break;
+          }
+        }
+        
+        if (!has_swap) {
+          break;
+        }
+      }
+    }
+  };
 };
 
 #endif /* BFile_hpp */
