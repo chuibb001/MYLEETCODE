@@ -211,6 +211,52 @@ public:
     
     return left_stack.empty();
   };
+//    给你一个整数数组 nums ，数组中的元素 互不相同 。返回该数组所有可能的子集（幂集）。
+//    解集 不能 包含重复的子集。你可以按 任意顺序 返回解集。
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> empty_set;
+        result.push_back(empty_set);
+        for (int i = 0; i < nums.size(); i ++) {
+            int num = nums[i];
+            int old_size = (int)result.size();
+            for (int i = 0; i < old_size; i ++) {
+                vector<int> old_vector = result[i];
+                vector<int> new_vector;
+                // 添加旧元素
+                for (auto& old_num : old_vector) {
+                    new_vector.push_back(old_num);
+                }
+                new_vector.push_back(num);
+                result.push_back(new_vector);
+            }
+        }
+        return result;
+    };
+    vector<vector<int>> subsets2(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> temp;
+        for (int length = 0; length < nums.size(); length ++) {
+            subsets_backtrace(0, length, temp, nums, result);
+        }
+        return result;
+    };
+    void subsets_backtrace(int start, int length, vector<int>& temp, vector<int>& nums, vector<vector<int>>& result) {
+        if (length == 0) {
+            result.push_back(temp);
+            return;
+        }
+        
+        if (start + length > nums.size()) {
+            return;
+        }
+        
+        for (int i = start; i < nums.size(); i ++) {
+            temp.push_back(nums[i]);
+            subsets_backtrace(start + 1, length - 1, temp, nums, result);
+            temp.erase(temp.end());
+        }
+    }
 };
 
 #endif /* BFile_hpp */
