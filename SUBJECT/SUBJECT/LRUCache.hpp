@@ -42,9 +42,9 @@ public:
     int get(int key) {
         if (map.find(key) != map.end()) {
             Node* node = map[key];
-            return node->value;
             // 移动该node到头部
             moveNodeToHead(node);
+            return node->value;
         } else {
             return -1;
         }
@@ -58,14 +58,6 @@ public:
             // 移动该node到头部
             moveNodeToHead(node);
         } else {
-            Node* node = new Node();
-            node->key = key;
-            node->value = value;
-            map[key] = node;
-            // 加入node到头部
-            addNodeToHead(node);
-            size ++;
-
             if (size == max_num) {
             // 淘汰尾部
             Node* last = removeTail();
@@ -73,6 +65,14 @@ public:
             delete last;
             size -- ;
             }
+
+            Node* node = new Node();
+            node->key = key;
+            node->value = value;
+            map[key] = node;
+            // 加入node到头部
+            addNodeToHead(node);
+            size ++;
         }
     }
 
@@ -92,11 +92,11 @@ public:
     Node* removeTail() {
         Node *last = tail->previous;
         last->previous->next = tail;
-        tail->previous = last;
+        tail->previous = last->previous;
         return last;
     }
 
-    // 把新节点加到尾部
+    // 把新节点加到头部
     void addNodeToHead(Node *node) {
         node->next = head->next;
         node->next->previous = node;
@@ -104,5 +104,6 @@ public:
         head->next = node;
     }
 };
+
 
 #endif /* LRUCache_hpp */
