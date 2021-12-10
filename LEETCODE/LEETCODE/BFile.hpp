@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <unordered_map>
 
 using namespace std;
 
@@ -257,6 +258,31 @@ public:
             temp.erase(temp.end());
         }
     }
+//    给你一个字符串 s 和一个字符串列表 wordDict 作为字典，判定 s 是否可以由空格拆分为一个或多个在字典中出现的单词。
+    bool wordBreak(string s, vector<string>& wordDict) {
+            // 构建查询字典
+            std::unordered_map<string, bool> dict_map;
+            for (auto& dict : wordDict) {
+                dict_map[dict] = true;
+            }
+            // 结果数组
+            int n = (int)s.length();
+            bool result[n + 1];
+            result[0] = true;
+            // 动态规划
+            for (int i = 1; i <= n; i ++) {
+                for (int j = 0; j < i; j ++) {
+                    // 根据j分割的两个字符串都合法
+                    if (result[j] && dict_map[s.substr(j, i - j)]) {
+                        result[i] = true;
+                        break;
+                    } else {
+                        result[i] = false;
+                    }
+                }
+            }
+            return result[n];
+        }
 };
 
 #endif /* BFile_hpp */

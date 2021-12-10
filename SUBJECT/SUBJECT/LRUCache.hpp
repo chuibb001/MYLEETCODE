@@ -58,7 +58,7 @@ public:
             // 移动该node到头部
             moveNodeToHead(node);
         } else {
-            if (size == max_num) {
+            if (map.size() == max_num) {
             // 淘汰尾部
             Node* last = removeTail();
             map.erase(last->key);
