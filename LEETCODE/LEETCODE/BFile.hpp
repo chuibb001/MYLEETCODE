@@ -303,7 +303,6 @@ public:
     };
     
     void checkIsland(vector<vector<char>>& grid, vector<vector<bool>>& visit, int row_index, int col_index) {
-            
             // 把当前位置访问了
             visit[row_index][col_index] = true;
             
@@ -327,6 +326,48 @@ public:
                  }
             }
         }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // 构造图的边
+        vector<vector<bool>> graph(numCourses);
+        for (auto& pre : prerequisites) {
+            graph[pre[0]].push_back(pre[1]);
+        }
+        
+        // 访问过的节点数组（回溯用）
+        vector<bool> visit(numCourses, false);
+        // 访问过的节点数组（永久记录）
+        vector<bool> step(numCourses, false);
+
+        // 找起点：注意可能有多个图集合
+        for (int i = 0; i < numCourses; i ++) {
+            if (step[i] == false) {
+                if (has_cycle_recursive(i, graph, visit, step)) { // 只要找到一个环就可以返回FALSE了
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    // 监测cur_course为起点的子图里有没有环
+    bool has_cycle_recursive(int cur_course, vector<vector<bool>>& graph, vector<bool>& visit, vector<bool>& step) {
+        visit[cur_course] = true;
+        step[cur_course] = true;
+        vector<bool>& edges = graph[cur_course];
+        bool has_cycle = false;
+        for (int i = 0; i < edges.size(); i ++) {
+            if (visit[i] == true) { // 下一个节点访问过，即有环
+                return true;
+            }
+            has_cycle = has_cycle_recursive(i, graph, visit, step);
+            if (has_cycle == true) {
+                return true;
+            }
+        }
+        visit[cur_course] = false; // 回溯
+        
+        return has_cycle;
+    }
 };
 
 #endif /* BFile_hpp */
