@@ -283,6 +283,50 @@ public:
             }
             return result[n];
         }
+//    给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+//    岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
+//    此外，你可以假设该网格的四条边均被水包围。
+    int numIslands(vector<vector<char>>& grid) {
+        vector<vector<bool>> visit(grid.size(), vector<bool>(grid[0].size(), false));
+        int count = 0;
+        for (int row = 0; row < grid.size(); row ++) {
+            vector<char> row_vector = grid[row];
+            for (int col = 0; col < row_vector.size(); col ++) {
+                if (visit[row][col] == false && grid[row][col] == '1') {
+                    checkIsland(grid, visit, row, col);
+                    count ++;
+                }
+            }
+        }
+        
+        return count;
+    };
+    
+    void checkIsland(vector<vector<char>>& grid, vector<vector<bool>>& visit, int row_index, int col_index) {
+            
+            // 把当前位置访问了
+            visit[row_index][col_index] = true;
+            
+            // 继续访问
+            vector<pair<int, int>> direction;
+            direction.emplace_back(0, 1);
+            direction.emplace_back(0, -1);
+            direction.emplace_back(1, 0);
+            direction.emplace_back(-1, 0);
+            for (int i = 0; i < direction.size(); i ++) {
+                pair<int, int>& dir = direction[i];
+                int new_row = row_index + dir.first;
+                int new_col = col_index + dir.second;
+                if (new_row < grid.size() &&
+                     new_col < grid[0].size() &&
+                        new_row >= 0 &&
+                        new_col >= 0 &&
+                        grid[new_row][new_col] != '0' &&
+                        visit[new_row][new_col] == false) {
+                    checkIsland(grid, visit, new_row, new_col);
+                 }
+            }
+        }
 };
 
 #endif /* BFile_hpp */
