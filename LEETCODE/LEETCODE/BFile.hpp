@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <unordered_map>
 
 using namespace std;
 
@@ -256,6 +257,116 @@ public:
             subsets_backtrace(start + 1, length - 1, temp, nums, result);
             temp.erase(temp.end());
         }
+    }
+//    给你一个字符串 s 和一个字符串列表 wordDict 作为字典，判定 s 是否可以由空格拆分为一个或多个在字典中出现的单词。
+    bool wordBreak(string s, vector<string>& wordDict) {
+            // 构建查询字典
+            std::unordered_map<string, bool> dict_map;
+            for (auto& dict : wordDict) {
+                dict_map[dict] = true;
+            }
+            // 结果数组
+            int n = (int)s.length();
+            bool result[n + 1];
+            result[0] = true;
+            // 动态规划
+            for (int i = 1; i <= n; i ++) {
+                for (int j = 0; j < i; j ++) {
+                    // 根据j分割的两个字符串都合法
+                    if (result[j] && dict_map[s.substr(j, i - j)]) {
+                        result[i] = true;
+                        break;
+                    } else {
+                        result[i] = false;
+                    }
+                }
+            }
+            return result[n];
+        }
+//    给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+//    岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
+//    此外，你可以假设该网格的四条边均被水包围。
+    int numIslands(vector<vector<char>>& grid) {
+        vector<vector<bool>> visit(grid.size(), vector<bool>(grid[0].size(), false));
+        int count = 0;
+        for (int row = 0; row < grid.size(); row ++) {
+            vector<char> row_vector = grid[row];
+            for (int col = 0; col < row_vector.size(); col ++) {
+                if (visit[row][col] == false && grid[row][col] == '1') {
+                    checkIsland(grid, visit, row, col);
+                    count ++;
+                }
+            }
+        }
+        
+        return count;
+    };
+    
+    void checkIsland(vector<vector<char>>& grid, vector<vector<bool>>& visit, int row_index, int col_index) {
+            // 把当前位置访问了
+            visit[row_index][col_index] = true;
+            
+            // 继续访问
+            vector<pair<int, int>> direction;
+            direction.emplace_back(0, 1);
+            direction.emplace_back(0, -1);
+            direction.emplace_back(1, 0);
+            direction.emplace_back(-1, 0);
+            for (int i = 0; i < direction.size(); i ++) {
+                pair<int, int>& dir = direction[i];
+                int new_row = row_index + dir.first;
+                int new_col = col_index + dir.second;
+                if (new_row < grid.size() &&
+                     new_col < grid[0].size() &&
+                        new_row >= 0 &&
+                        new_col >= 0 &&
+                        grid[new_row][new_col] != '0' &&
+                        visit[new_row][new_col] == false) {
+                    checkIsland(grid, visit, new_row, new_col);
+                 }
+            }
+        }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // 构造图的边
+        vector<vector<bool>> graph(numCourses);
+        for (auto& pre : prerequisites) {
+            graph[pre[0]].push_back(pre[1]);
+        }
+        
+        // 访问过的节点数组（回溯用）
+        vector<bool> visit(numCourses, false);
+        // 访问过的节点数组（永久记录）
+        vector<bool> step(numCourses, false);
+
+        // 找起点：注意可能有多个图集合
+        for (int i = 0; i < numCourses; i ++) {
+            if (step[i] == false) {
+                if (has_cycle_recursive(i, graph, visit, step)) { // 只要找到一个环就可以返回FALSE了
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    // 监测cur_course为起点的子图里有没有环
+    bool has_cycle_recursive(int cur_course, vector<vector<bool>>& graph, vector<bool>& visit, vector<bool>& step) {
+        visit[cur_course] = true;
+        step[cur_course] = true;
+        vector<bool>& edges = graph[cur_course];
+        bool has_cycle = false;
+        for (int i = 0; i < edges.size(); i ++) {
+            if (visit[i] == true) { // 下一个节点访问过，即有环
+                return true;
+            }
+            has_cycle = has_cycle_recursive(i, graph, visit, step);
+            if (has_cycle == true) {
+                return true;
+            }
+        }
+        visit[cur_course] = false; // 回溯
+        
+        return has_cycle;
     }
 };
 
