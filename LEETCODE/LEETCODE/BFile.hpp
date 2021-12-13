@@ -328,7 +328,7 @@ public:
         }
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         // 构造图的边
-        vector<vector<bool>> graph(numCourses);
+        vector<vector<int>> graph(numCourses);
         for (auto& pre : prerequisites) {
             graph[pre[0]].push_back(pre[1]);
         }
@@ -350,16 +350,17 @@ public:
         return true;
     }
     // 监测cur_course为起点的子图里有没有环
-    bool has_cycle_recursive(int cur_course, vector<vector<bool>>& graph, vector<bool>& visit, vector<bool>& step) {
+    bool has_cycle_recursive(int cur_course, vector<vector<int>>& graph, vector<bool>& visit, vector<bool>& step) {
         visit[cur_course] = true;
         step[cur_course] = true;
-        vector<bool>& edges = graph[cur_course];
+        vector<int>& edges = graph[cur_course];
         bool has_cycle = false;
         for (int i = 0; i < edges.size(); i ++) {
-            if (visit[i] == true) { // 下一个节点访问过，即有环
+            int node = edges[i];
+            if (visit[node] == true) { // 下一个节点访问过，即有环
                 return true;
             }
-            has_cycle = has_cycle_recursive(i, graph, visit, step);
+            has_cycle = has_cycle_recursive(node, graph, visit, step);
             if (has_cycle == true) {
                 return true;
             }
@@ -368,6 +369,53 @@ public:
         
         return has_cycle;
     }
+//    s = "3[a]2[bc]"
+//    s = "3[a2[c]]"
+    string decodeString(string s) {
+        stack<int> stack;
+        int i = 0;
+        while (i != s.size()) {
+            string sub_str = s.substr(i, 1);
+
+            if (sub_str == "[") {
+                stack.push(i);
+            } else if (sub_str == "]") {
+                // 进行局部展开
+                int left_index = stack.top();
+                stack.pop();
+                string repeat_str = s.substr(left_index + 1, i - left_index - 1);
+                // 找数字
+                int num = 0;
+                int inc = 1;
+                int num_index = left_index - 1;
+                int num_count = 0;
+                while (num_index > -1) {
+                    string num_str = s.substr(num_index, 1);
+                    char num_char = *num_str.c_str();
+                    if (num_char >= 48 && num_char <= 57) {
+                        int cur_num = num_char - 48;
+                        num += (cur_num * inc);
+                        inc *= 10;
+                        num_count ++;
+                    } else {
+                        break;
+                    }
+                    num_index -- ;
+                }
+                string complete_str;
+                for (int time = 0; time < num; time ++) {
+                    complete_str += repeat_str;
+                }
+                s = s.substr(0, left_index - num_count) + complete_str + s.substr(i + 1, s.size() - i - 1);
+                i -= (i - left_index + num_count);
+                i += (complete_str.length() - 1);
+            }
+            i ++;
+        }
+
+        return s;
+    }
+
 };
 
 #endif /* BFile_hpp */
