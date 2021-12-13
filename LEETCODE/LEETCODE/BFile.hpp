@@ -415,6 +415,84 @@ public:
 
         return s;
     }
+//    给你一个 只包含正整数 的 非空 数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+//    [1,5,11,5]
+    bool canPartitionDP(vector<int>& nums) {
+        int sum = sumOfNums(nums);
+        if (sum % 2 != 0) {
+            return false;
+        }
+        if (nums.size() < 2) {
+            return false;
+        }
+        int half_sum = sum / 2;
+        vector<vector<int>> dp(nums.size(), vector<int>(half_sum + 1, 0)); // dp表示该列的数值容量下，能否由行表示的子数组的子集和最大值
+        // 初始化第一行
+        int num = nums[0];
+        if (num <= half_sum)
+            dp[0][num] = num;
+        for (int i = 1; i < nums.size(); i ++) {
+            int num = nums[i];
+            for (int j = 1; j <= half_sum; j ++) {
+                if (j - num >= 0) {
+                    if (num + dp[i - 1][j - num] == j) {
+                        dp[i][j] = num + dp[i - 1][j - num];
+                    }
+                }
+                // 没找到新结果，就集成旧结果
+                if (dp[i][j] == 0) {
+                    dp[i][j] = dp[i - 1][j];
+                }
+                
+            }
+        }
+        
+        return dp[nums.size() - 1][half_sum] == half_sum;
+    }
+    
+    bool canPartition(vector<int>& nums) {
+        int mid = (int)nums.size() / 2;
+        int sum = sumOfNums(nums);
+        double half_sum = (double)sum / 2.0;
+        
+        for (int i = 1; i <= mid; i ++) {
+            // 递归找到C(n, i)
+            vector<int> result;
+            if (canPartitionRecursive(nums, result, 0, i, half_sum)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    bool canPartitionRecursive(vector<int>& nums, vector<int>& result, int start_index, int pick_count, double sum) {
+        if (result.size() == pick_count) {
+            if (sumOfNums(result) == sum) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            for (int i = start_index; i < nums.size(); i ++) {
+                result.push_back(nums[i]);
+                bool success = canPartitionRecursive(nums, result, i + 1, pick_count, sum);
+                if (success) {
+                    return true;
+                }
+                result.pop_back();
+            }
+        }
+        
+        return false;
+    }
+    
+    int sumOfNums(vector<int>& nums) {
+        int sum = 0;
+        for (int& num: nums) {
+            sum += num;
+        }
+        return sum;
+    }
 
 };
 
