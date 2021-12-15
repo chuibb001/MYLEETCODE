@@ -13,8 +13,18 @@
 #include <string>
 #include <stack>
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
+
+struct TreeNode {
+      int val;
+      TreeNode *left;
+      TreeNode *right;
+      TreeNode() : val(0), left(nullptr), right(nullptr) {}
+      TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+      TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+  };
 
 class Solution {
 //  以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi] 。请你合并所有重叠的区间，并返回一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间。
@@ -493,7 +503,89 @@ public:
         }
         return sum;
     }
-
+//    给定两个字符串 s 和 p，找到 s 中所有 p 的 异位词 的子串，返回这些子串的起始索引。不考虑答案输出的顺序。
+//    异位词 指由相同字母重排列形成的字符串（包括相同的字符串）。
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> result;
+        if (p.size() > s.size()) return result;
+        
+        int length = (int)p.length();
+        vector<int> s_count(26, 0);
+        vector<int> p_count(26, 0);
+        // 初始化窗口
+        for (int i = 0; i < length; i ++) {
+            ++s_count[s[i] - 97];
+            ++p_count[p[i] - 97];
+        }
+        
+        // 首次比较
+        if (s_count == p_count) {
+            result.push_back(0);
+        }
+        
+        // 滑动窗口
+        for (int i = 0; i < s.length() - p.length(); i ++) {
+            ++s_count[s[i + length] - 97];
+            --s_count[s[i] - 97];
+            
+            if (s_count == p_count) {
+                result.push_back(i + 1);
+            }
+        }
+        
+        return result;
+    }
+    
+    void findAnagramsRecursive(string p, string cur, unordered_set<string>& table, vector<bool>& use) {
+        if (p.length() == cur.length()) {
+            table.insert(cur);
+        } else {
+            for (int i = 0; i < p.length(); i ++) {
+                if (!use[i]) {
+                    cur += p.substr(i, 1);
+                    use[i] = true;
+                    findAnagramsRecursive(p, cur, table, use);
+                    use[i] = false;
+                    cur.pop_back();
+                }
+            }
+        }
+    }
+    
+    TreeNode* convertBST(TreeNode* root) {
+        convertBSTRecursive(root, 0);
+        return root;
+    }
+    int convertBSTRecursive(TreeNode* root, int base) {
+        if (!root) return 0;
+        
+        int this_root_max_sum_except_base = root->val;
+        
+        // right tree first
+        if (root->right) {
+            int sum = convertBSTRecursive(root->right, base);
+            root->val += sum;
+            this_root_max_sum_except_base = root->val;
+        }
+        
+        // left tree second
+        if (root->left) {
+            int sum = convertBSTRecursive(root->left, root->val + base);
+            this_root_max_sum_except_base += sum;
+        }
+        
+        root->val += base;
+        
+        return this_root_max_sum_except_base;
+    }
+//    给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+//    输入：nums = [2,6,4,8,10,9,15]
+//    输出：5
+    int findUnsortedSubarray(vector<int>& nums) {
+        int count = 0;
+        
+        return count;
+    }
 };
 
 #endif /* BFile_hpp */

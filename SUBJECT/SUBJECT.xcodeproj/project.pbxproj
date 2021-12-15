@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		611190872769E6E200E21AA3 /* BFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 611190852769E6E200E21AA3 /* BFile.cpp */; };
 		612A1B862755E51200DA96FD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 612A1B852755E51200DA96FD /* AppDelegate.m */; };
 		612A1B892755E51200DA96FD /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 612A1B882755E51200DA96FD /* SceneDelegate.m */; };
 		612A1B8C2755E51200DA96FD /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 612A1B8B2755E51200DA96FD /* ViewController.mm */; };
@@ -18,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		611190852769E6E200E21AA3 /* BFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BFile.cpp; sourceTree = "<group>"; };
+		611190862769E6E200E21AA3 /* BFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BFile.hpp; sourceTree = "<group>"; };
 		612A1B812755E51200DA96FD /* SUBJECT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SUBJECT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		612A1B842755E51200DA96FD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		612A1B852755E51200DA96FD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -72,6 +75,8 @@
 				612A1B8B2755E51200DA96FD /* ViewController.mm */,
 				61C08F38275872F200ECA719 /* LRUCache.hpp */,
 				61C08F37275872F200ECA719 /* LRUCache.cpp */,
+				611190862769E6E200E21AA3 /* BFile.hpp */,
+				611190852769E6E200E21AA3 /* BFile.cpp */,
 				612A1B8D2755E51200DA96FD /* Main.storyboard */,
 				612A1B902755E51600DA96FD /* Assets.xcassets */,
 				612A1B922755E51600DA96FD /* LaunchScreen.storyboard */,
@@ -153,6 +158,7 @@
 			files = (
 				61C08F39275872F200ECA719 /* LRUCache.cpp in Sources */,
 				612A1B8C2755E51200DA96FD /* ViewController.mm in Sources */,
+				611190872769E6E200E21AA3 /* BFile.cpp in Sources */,
 				612A1B862755E51200DA96FD /* AppDelegate.m in Sources */,
 				612A1B972755E51600DA96FD /* main.m in Sources */,
 				612A1B892755E51200DA96FD /* SceneDelegate.m in Sources */,
