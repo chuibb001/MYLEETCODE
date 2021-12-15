@@ -20,7 +20,9 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   // Do any additional setup after loading the view.
-
+    Solution s;
+    vector<int> v = {3,2,3,2,4};
+    s.findUnsortedSubarray(v);
 }
 
 - (NSData *)dataWithHexString:(NSString *)str

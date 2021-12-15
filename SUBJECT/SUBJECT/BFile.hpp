@@ -582,7 +582,51 @@ public:
 //    输入：nums = [2,6,4,8,10,9,15]
 //    输出：5
     int findUnsortedSubarray(vector<int>& nums) {
+        if (nums.size() <= 1) return 0;
+        
         int count = 0;
+        int interval_start = -1;
+        int interval_end = 0;
+        int interval_min = 0;
+        int interval_max = 0;
+        // 一轮循环构造几个关键点变量
+        for (int i = 1; i < nums.size(); i ++) {
+            if (nums[i] < nums[i - 1]) {
+                if (interval_start == -1) {
+                    // 初始化
+                    interval_start = i - 1;
+                    interval_min = nums[i];
+                    interval_max = nums[i - 1];
+                }
+                interval_end = i;
+            }
+        }
+        if (interval_start == -1) {
+            return 0;
+        }
+        // 二轮循环寻找区间内最大最小值
+        for (int i = interval_start; i <= interval_end; i ++) {
+            if (nums[i] > interval_max) {
+                interval_max = nums[i];
+            }
+            if (nums[i] < interval_min) {
+                interval_min = nums[i];
+            }
+        }
+        // 三轮循环延展开始边界
+        for (int i = interval_start - 1; i >= 0; i --) {
+            if (nums[i] > interval_min) {
+                interval_start --;
+            }
+        }
+        for (int i = interval_end + 1; i < nums.size(); i ++) {
+            if (nums[i] < interval_max) {
+                interval_end ++;
+            }
+        }
+        if (interval_end != interval_start) {
+            count = interval_end - interval_start + 1;
+        }
         
         return count;
     }
